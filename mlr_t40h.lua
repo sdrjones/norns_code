@@ -21,8 +21,9 @@
 --
 --
 
-
-local g = grid.connect()
+local t40h = include 'lib/twin40h'
+local g = t40h
+g.init(false)
 
 local fileselect = require 'fileselect'
 local textentry = require 'textentry'
@@ -553,8 +554,8 @@ end
 gridredraw_nav = function()
   -- indicate view
   g:led(view,1,15)
-  if alt==1 then g:led(16,1,9) end
-  if quantize==1 then g:led(15,1,9) end
+  if alt==1 then g:led(16,1,15) end
+  if quantize==1 then g:led(15,1,15) end
   for i=1,4 do
     -- patterns
     if pattern[i].rec == 1 then g:led(i+4,1,15)
@@ -672,18 +673,18 @@ end
 
 v.gridredraw[vREC] = function()
   g:all(0)
-  g:led(3,focus+1,7)
-  g:led(4,focus+1,7)
+  g:led(3,focus+1,15)
+  g:led(4,focus+1,15)
   for i=1,TRACKS do
     local y = i+1
     g:led(1,y,3)--rec
-    if track[i].rec == 1 then g:led(1,y,9) end
+    if track[i].rec == 1 then g:led(1,y,15) end
     if track[i].tempo_map == 1 then g:led(5,y,7) end -- tempo.map
-    g:led(8,y,3)--rev
-    g:led(16,y,3)--stop
-    g:led(12,y,3)--speed=1
-    g:led(12+track[i].speed,y,9)
-    if track[i].rev == 1 then g:led(8,y,7) end
+    g:led(8,y,0)--rev
+    g:led(16,y,0)--stop
+    g:led(12,y,0)--speed=1
+    g:led(12+track[i].speed,y,15)
+    if track[i].rev == 1 then g:led(8,y,15) end
     if track[i].play == 1 then g:led(16,y,15) end
   end
   gridredraw_nav()
@@ -780,13 +781,17 @@ v.gridredraw[vCUT] = function()
   g:all(0)
   gridredraw_nav()
   for i=1,TRACKS do
+    local posled = 15
     if track[i].loop == 1 then
       for x=track[i].loop_start,track[i].loop_end do
-        g:led(x,i+1,4)
+        g:led(x,i+1,15)
+        posled = 0
+        --print("track " .. i .. " loop_start " .. track[i].loop_start .. " loop_end " .. track[i].loop_end)
       end
     end
     if track[i].play == 1 then
-      g:led((track[i].pos_grid+1)%16, i+1, 15)
+      g:led((track[i].pos_grid+1)%17, i+1, posled)
+      --print("track " .. i .. " pos_grid " .. track[i].pos_grid)
     end
   end
   g:refresh();

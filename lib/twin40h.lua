@@ -48,6 +48,8 @@ end
 function twin40h:led(y,x,z)
   local cg = twin40h.g1
 
+  local ox = y
+  local oy = x
   if y > 8 then
     cg = twin40h.g2
     y = y - 8
@@ -55,7 +57,9 @@ function twin40h:led(y,x,z)
   if (twin40h.flipz) then
     z = twin40h.convert_z(z)
   end
-  --print("led " .. x .. " " .. y .. " " .. z)
+  --if (y < 1) then
+  --  print("led x " .. 9-x .. " y " .. y .. " z " .. z .. " ox " .. ox .. " oy " .. oy)
+  --end
   cg:led(9-x,y,z)
 end
 
